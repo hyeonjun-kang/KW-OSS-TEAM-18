@@ -26,8 +26,14 @@ public:
     {
         int dice1 = shakeDice();
         int dice2 = shakeDice();
-        cout <<"Dice One: "<< dice1 << " " <<"Dice Two: " << dice2 << endl;
+        cout << "Dice One: " << dice1 << " " << "Dice Two: " << dice2 << endl;
     }
 
+    int GetDiceValue()
+    {
+        int dice1 = shakeDice();
+        int dice2 = shakeDice();
+        return dice1 * dice2;
+    }
 };
 #endif
