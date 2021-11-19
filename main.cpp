@@ -1,29 +1,13 @@
 #include<iostream>
 #include<Windows.h>
 #include<conio.h>
+#include <ctime>
+#include <random>
 
-using namespace std;
+using namespace std; 
 
 #define INIT_POS 1
-
-//-----------------------------------------
-//ì½˜ì†” ë‚´ë¶€ì˜ íŠ¹ì • ìœ„ì¹˜ë¡œ ì»¤ì„œë¥¼ ì´ë™í•˜ëŠ” í•¨ìˆ˜.
-void GotoXY(int x, int y)
-{
-	COORD pos;
-	pos.X = 2 * x;
-	pos.Y = y;
-	SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), pos);
-}
-
-//ì½˜ì†” ì°½ í¬ê¸°ì™€ ì œëª©ì„ ê´€ë¦¬í•˜ëŠ” í•¨ìˆ˜.
-void SetConsoleView()
-{
-	system("mode con:cols=80 lines=20");
-	system("title Dice Game");
-}
-
-//í‚¤ë³´ë“œ ì…ë ¥ ê°ì§€ ë° ì…ë ¥ëœ í‚¤ë³´ë“œë¥¼ ë°˜í™˜í•˜ëŠ” í•¨ìˆ˜.
+//Å°º¸µå ÀÔ·Â °¨Áö ¹× ÀÔ·ÂµÈ Å°º¸µå¸¦ ¹İÈ¯ÇÏ´Â ÇÔ¼ö.
 int GetKeyDown()
 {
 	if (_kbhit() != 0)
@@ -33,22 +17,67 @@ int GetKeyDown()
 	return 0;
 }
 //-----------------------------------------
-//2ì°¨ì› ë°°ì—´ë¡œ ì´ë£¨ì–´ì§„ ë§µ
+//ÄÜ¼Ö ³»ºÎÀÇ Æ¯Á¤ À§Ä¡·Î Ä¿¼­¸¦ ÀÌµ¿ÇÏ´Â ÇÔ¼ö.
+void GotoXY(int x, int y)
+{
+	COORD pos;
+	pos.X = 2 * x;
+	pos.Y = y;
+	SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), pos);
+}
+void title() {
+	GotoXY(3, 2);
+	printf("     _ _                                                  _  \n");
+	GotoXY(3, 3);
+	printf("  __| (_) ___ ___    ___ ___  _ __   __ _ _   _  ___  ___| |_ \n");
+	GotoXY(3, 4);
+	printf(" / _` | |/ __/ _ |  / __/ _ || '_ | / _` | | | |/ _ |/ __| __|\n");
+	GotoXY(3, 5);
+	printf("| (_| | | (_|  __/ | (_| (_) | | | | (_| | |_| |  __/|__ | |_ \n");
+	GotoXY(3, 6);
+	printf(" |__,_|_||___|___|  |___|___/|_| |_||__, ||__,_||___||___/|__|\n");
+	GotoXY(3, 7);
+	printf("                                       |_|                   \n ");
+
+	GotoXY(10, 13);
+	printf("¢Ã press any key to game start ¢Ã");
+	GotoXY(10, 15);
+	printf("¢Ã   press 'q' to game exit    ¢Ã");
+	int key = _getch();
+	if (key == 'q' || key == 'Q') {
+		system("cls");
+		exit(1);
+	}
+	system("cls");
+}
+//ÄÜ¼Ö Ã¢ Å©±â¿Í Á¦¸ñÀ» °ü¸®ÇÏ´Â ÇÔ¼ö.
+void SetConsoleView()
+{
+	system("mode con:cols=80 lines=20");
+	system("title Dice Game");
+}
+
+
+//-----------------------------------------
+//2Â÷¿ø ¹è¿­·Î ÀÌ·ç¾îÁø ¸Ê
 const int originMap[6][6] = { {1, 1, 2, 2, 3, 3},
 								{4, 4, 5, 5, 6, 6},
 								{8, 8, 9, 9, 10, 10},
 								{12, 12, 15, 15, 16, 16},
 								{18, 18, 20, 20, 24, 24},
 								{25, 25, 30, 30, 36, 36} };
-
-//í¬ì§€ì…˜ êµ¬ì¡°ì²´
+void text_remove() {
+	GotoXY(0, 15);
+	for (int i = 0; i < 120; i++) { printf("  "); }
+}
+//Æ÷Áö¼Ç ±¸Á¶Ã¼
 struct Pos
 {
 	int x;
 	int y;
 };
 
-//í‚¤ë³´ë“œ ì…ë ¥ì„ ì €ì¥í•´ ë†“ì€ enum
+//Å°º¸µå ÀÔ·ÂÀ» ÀúÀåÇØ ³õÀº enum
 enum KEYBOARD
 {
 	IS_ARROW = 224,
@@ -59,7 +88,7 @@ enum KEYBOARD
 	SPACE = 32,
 };
 
-//ìƒ‰ìƒì„ ì €ì¥í•´ë†“ì€ enum
+//»ö»óÀ» ÀúÀåÇØ³õÀº enum
 enum COLOR
 {
 	GREEN = 10,
@@ -69,74 +98,369 @@ enum COLOR
 	YELLOW,
 	WHITE,
 };
+int* getindex(int num){
+	int *arr = new int[2];
+	switch (num) {
+	case 1:
+		arr[0] = 0; arr[1] = 0; break;
+	case 2:
+		arr[0] = 0; arr[1] = 2; break;
+	case 3:
+		arr[0] = 0; arr[1] = 4; break;
+	case 4:
+		arr[0] = 1; arr[1] = 0; break;
+	case 5:
+		arr[0] = 1; arr[1] = 2; break;
+	case 6:
+		arr[0] = 1; arr[1] = 4; break;
+	case 8:
+		arr[0] = 2; arr[1] = 0; break;
+	case 9:
+		arr[0] = 2; arr[1] = 2; break;
+	case 10:
+		arr[0] = 2; arr[1] = 4; break;
+	case 12:
+		arr[0] = 3; arr[1] = 0; break;
+	case 15:
+		arr[0] = 3; arr[1] = 2; break;
+	case 16:
+		arr[0] = 3; arr[1] = 4; break;
+	case 18:
+		arr[0] = 4; arr[1] = 0; break;
+	case 20:
+		arr[0] = 4; arr[1] = 2; break;
+	case 24:
+		arr[0] = 4; arr[1] = 4; break;
+	case 25:
+		arr[0] = 5; arr[1] = 0; break;
+	case 30:
+		arr[0] = 5; arr[1] = 2; break;
+	case 36:
+		arr[0] = 5; arr[1] = 4; break;
+	}
+	return arr;
+}
+namespace P {
+	class player {
+	public:
+		player() {
+			order = 0;
+			many_ground = 0;
+			opponent_color = 0;
+			my_color = 0;
+		}
 
-//ê²Œì„ ë§¤ë‹ˆì € í´ë˜ìŠ¤
+		int get_order() { return order; }
+		int get_many_ground() { return many_ground; }
+		int get_opponent_color() {return opponent_color;}
+		int get_my_color() { return my_color; }
+		void set_order(int num) { order = num; }
+		void set_many_ground(int many) { many_ground = many; }
+		void set_opponent_color(int color) {  opponent_color=color; }
+		void set_my_color(int color) { my_color = color; }
+
+	private:
+		int opponent_color;
+		int order;
+		int many_ground;
+		int my_color;
+	};
+	void player_order(player *p1, player *p2);
+	bool player_win(player p1, player p2);
+	void player_order(player *p1, player *p2)
+	{
+		printf("°ÔÀÓÀ» ½ÃÀÛÇÏ±â Àü¿¡ ¼ø¼­¸¦ Á¤ÇÏ°Ú½À´Ï´Ù.\n");
+		printf("ÁÖ»çÀ§¸¦ ´øÁ®¼­ ³ôÀº ´«ÀÌ ³ª¿Â ÇÃ·¹ÀÌ¾î°¡ ¸ÕÀú ÅÏÀ» ½ÃÀÛÇÏ°Ô µË´Ï´Ù.\n");
+		while (1) {
+			printf("player1(GREEN), ¾Æ¹«Å°³ª ´­·¯ ÁÖ»çÀ§ ´øÁö±â\n");
+			_getch();
+			int dice1 = rand() % 6 + 1;
+			printf("player1(GREEN) dice : %d\n", dice1);
+
+			printf("player2(RED), ¾Æ¹«Å°³ª ´­·¯ ÁÖ»çÀ§ ´øÁö±â\n");
+			_getch();
+			int dice2 = rand() % 6 + 1;
+			printf("player2(RED) dice : %d\n", dice2);
+			if (dice1 == dice2) {
+				printf("µÎ ÁÖ»çÀ§ÀÇ ´«ÀÌ °°À½, ´Ù½Ã ´øÁ®¼­ ¼ø¼­ Á¤ÇÏ±â!\n");
+				continue;
+			}
+			else if (dice1 > dice2) {
+				p1->set_order(1);
+				p2->set_order(2);
+				printf("player1(GREEN) Ã¹¹øÂ°!,player2(RED) µÎ¹øÂ°!\n");
+				break;
+			}
+			else {
+				p1->set_order(2);
+				p2->set_order(1);
+				printf("player2(RED) Ã¹¹øÂ°!,player1(GREEN) µÎ¹øÂ°!\n");
+				break;
+			}
+		}
+		printf(" ¾Æ¹«Å°³ª ´­·¯¼­ °ÔÀÓ ½ÃÀÛ\n");
+		_getch();
+		system("cls");
+		
+	}
+};
+
+
+
+
+//°ÔÀÓ ¸Å´ÏÀú Å¬·¡½º
 class GameManager
 {
 private:
-	Pos player;				//í”Œë ˆì´ì–´ ì»¤ì„œ ìœ„ì¹˜.
-	int spaceCount;			//ë’¤ì§‘ì€ íšŸìˆ˜.
-	int player1Count;		//player1 ì˜í†  ê°¯ìˆ˜
-	int player2Count;		//plyaer2 ì˜í†  ê°¯ìˆ˜
-	int colorMap[6][6];//ë•… ìƒ‰ê¹” ì €ì¥ í•¨ìˆ˜,p1ì€ GREEN p2ëŠ” RED
-	bool turn;//ëˆ„êµ¬ ì°¨ë¡€ì¸ì§€ì— ëŒ€í•œ ë³€ìˆ˜, TRUEë©´ P1, FALSE ë©´ P2
+	Pos player;				//ÇÃ·¹ÀÌ¾î Ä¿¼­ À§Ä¡.
+	int spaceCount;			//µÚÁıÀº È½¼ö.
+	int player1Count;		//player1 ¿µÅä °¹¼ö
+	int player2Count;		//plyaer2 ¿µÅä °¹¼ö
+	int colorMap[6][6];//¶¥ »ö±ò ÀúÀå ÇÔ¼ö,p1Àº GREEN p2´Â RED
+	bool turn;//´©±¸ Â÷·ÊÀÎÁö¿¡ ´ëÇÑ º¯¼ö, TRUE¸é P1, FALSE ¸é P2
 public:
 	void StartGame()
 	{
-		Init();		//ê²Œì„ ì´ˆê¸°í™”
-		DrawBack();	//ë°°ê²½ ê·¸ë¦¬ê¸°
+		P::player a1;
+		a1.set_opponent_color(RED);
+		a1.set_my_color(GREEN);
+		P::player a2;
+		a2.set_opponent_color(GREEN);
+		a2.set_my_color(RED);
+		P::player_order(&a1, &a2);
+		Init();		//°ÔÀÓ ÃÊ±âÈ­
+		DrawBack();	//¹è°æ ±×¸®±â
+		DrawMain();
+		score(&a1, &a2);
 
-		//ê²Œì„ ë£¨í”„ ì‹œì‘
-		int key = 0;
-		while (true)//ê²Œì„ ëë‚˜ëŠ” ì¡°ê±´ í•¨ìˆ˜ ë„£ê¸°
+		while (true)//°ÔÀÓ ³¡³ª´Â Á¶°Ç ÇÔ¼ö ³Ö±â
 		{
-			
-			key = GetKeyDown();	//í‚¤ ì…ë ¥ ë°›ëŠ” í•¨ìˆ˜
-			if (key == KEYBOARD::IS_ARROW)
-			{
-				//í™”ì‚´í‘œë“¤.
-				MovePos();
+			while (1) {//order 1 pase
+				P::player* this_turn=NULL;
+				P::player* oppo = NULL;
+				if (a1.get_order() == 1) {
+					GotoXY(5, 15);
+					printf("player 1(GREEN)ÀÇ ÅÏ ½ÃÀÛ!");
+					this_turn = &a1;
+					oppo = &a2;
+				}
+				else if(a2.get_order()==1) {
+					GotoXY(5, 15);
+					printf("player 2(RED)ÀÇ ÅÏ ½ÃÀÛ!");
+					this_turn = &a2;
+					oppo = &a1;
+				}
+				GotoXY(5, 16);
+				printf("¾Æ¹«Å°³ª ´­·¯ ÁÖ»çÀ§ ´øÁö±â");
+				_getch();
+				text_remove();
+				int dice1 = rand() % 6 + 1; int dice2 = rand() % 6 + 1;
+				GotoXY(5, 15);
+				printf("ÁÖ»çÀ§ °á°ú: %d, %d",dice1,dice2);
+				GotoXY(5, 16);
+				printf("%d¹ø ¶¥À» Á¡·ÉÇÒ ¼ö ÀÖ½À´Ï´Ù!", dice1*dice2);
+				GotoXY(5, 17);
+				printf("¾Æ¹«Å°³ª ´­·¯ ÁøÇàÇÏ±â");
+				_getch();
+				text_remove();
+				int *num=getindex(dice1 * dice2);
+				if (colorMap[*num][*(num + 1)] == 0|| colorMap[*num][*(num + 1)] ==this_turn->get_opponent_color()) {
+					if (colorMap[*num][*(num + 1)] == this_turn->get_opponent_color()) {
+						GotoXY(5, 15);
+						printf("»ó´ë ¶¥ %d¹ø ¶¥À» Á¡·ÉÇÏ¿´½À´Ï´Ù!", dice1 * dice2);
+						colorMap[*num][*(num + 1)] = this_turn->get_my_color();
+						this_turn->set_many_ground(this_turn->get_many_ground() + 1);
+						oppo->set_many_ground(oppo->get_many_ground() - 1);
+						GotoXY(5, 16);
+						printf("»ó´ë ¶¥À» Á¡·ÉÇÏ¿´À¸¹Ç·Î, ÇÑ¹ø ´õ ÁÖ»çÀ§¸¦ ´øÁú ±âÈ¸¸¦ ¾ò¾ú½À´Ï´Ù!");
+						GotoXY(5, 17);
+						printf("¾Æ¹«Å°³ª ´­·¯ ÁøÇàÇÏ±â");
+						_getch();
+						text_remove();
+						delete num;
+						DrawMain();
+						score(&a1, &a2);
+						Sleep(100);
+						if ((a1.get_many_ground() + a2.get_many_ground()) == 36) {
+							DrawGameClear(&a1, &a2);
+							break;
+						}
+						continue;
+					}
+					else {
+						GotoXY(5, 15);
+						printf("ºó ¶¥ %d¹ø ¶¥À» Á¡·ÉÇÏ¿´½À´Ï´Ù!", dice1 * dice2);
+						GotoXY(5, 16);
+						printf("¾Æ¹«Å°³ª ´­·¯ ÁøÇàÇÏ±â");
+						colorMap[*num][*(num + 1)] = this_turn->get_my_color();
+						this_turn->set_many_ground(this_turn->get_many_ground() + 1);
+						_getch();
+					}
+				}
+				else if (colorMap[*num][*(num + 1) + 1] == 0|| colorMap[*num][*(num + 1) + 1] == this_turn->get_opponent_color()) {
+					if (colorMap[*num][*(num + 1)+1] == this_turn->get_opponent_color()) {
+						GotoXY(5, 15);
+						printf("»ó´ë ¶¥ %d¹ø ¶¥À» Á¡·ÉÇÏ¿´½À´Ï´Ù!", dice1 * dice2);
+						colorMap[*num][*(num + 1) + 1] = this_turn->get_my_color();
+						this_turn->set_many_ground(this_turn->get_many_ground() + 1);
+						oppo->set_many_ground(oppo->get_many_ground() - 1);
+						GotoXY(5, 16);
+						printf("»ó´ë ¶¥À» Á¡·ÉÇÏ¿´À¸¹Ç·Î, ÇÑ¹ø ´õ ÁÖ»çÀ§¸¦ ´øÁú ±âÈ¸¸¦ ¾ò¾ú½À´Ï´Ù!"); 
+						GotoXY(5, 17);
+						printf("¾Æ¹«Å°³ª ´­·¯ ÁøÇàÇÏ±â"); _getch();
+						text_remove();
+						delete num;
+						DrawMain();
+						score(&a1, &a2);
+						Sleep(100);
+						if ((a1.get_many_ground() + a2.get_many_ground()) == 36) {
+							DrawGameClear(&a1, &a2);
+							break;
+						}
+						continue;
+					}
+					else {
+						GotoXY(5, 15);
+						printf("ºó ¶¥ %d¹ø ¶¥À» Á¡·ÉÇÏ¿´½À´Ï´Ù!", dice1 * dice2);
+						GotoXY(5, 16); 
+						printf("¾Æ¹«Å°³ª ´­·¯ ÁøÇàÇÏ±â");
+						_getch();
+						colorMap[*num][*(num + 1) + 1] = this_turn->get_my_color();
+						this_turn->set_many_ground(this_turn->get_many_ground() + 1);
+					}
+				}
+				else {
+					GotoXY(5, 15);
+					printf("Á¡·ÉÇÒ %d¹øÂ° ¶¥ÀÌ ¾ø½À´Ï´Ù..", dice1 * dice2); 
+					GotoXY(5, 16);
+					printf("¾Æ¹«Å°³ª ´­·¯ ÁøÇàÇÏ±â"); _getch();
+				}
+				text_remove();
+				delete num;
+				break;
 			}
-			if (key == KEYBOARD::SPACE)//í˜„ì¬ ì¢Œí‘œ ColorMap ìƒ‰ ë°”ê¾¸ê³  ê·¸ í”Œë ˆì´ì–´ì˜ ì˜í† ìˆ˜ +1
-			{
-				if (turn == false) {
-					if (colorMap[player.y][player.x] == GREEN) {//ë§Œì•½ ì´ë¯¸ ë•…ì´ ìƒëŒ€ë°©ì´ ìƒ‰ê¹”ì´ë©´, ìƒëŒ€ë°© ë•… ê°¯ìˆ˜ -1 í›„ ìì‹ ì˜ ìƒ‰ìœ¼ë¡œ ë³€ê²½í›„ í•œë²ˆì˜ ê¸°íšŒ ë” ê°€ì§
-						colorMap[player.y][player.x] = RED;
-						player2Count++;
-						player1Count--;
+			DrawMain();
+			score(&a1, &a2);
+			Sleep(100);
+			if ((a1.get_many_ground() + a2.get_many_ground()) == 36) {
+				DrawGameClear(&a1, &a2);
+				break;
+			}
+			while (1) {//order 2 pase
+				P::player* this_turn = NULL;
+				P::player* oppo = NULL;
+				if (a1.get_order() == 2) {
+					GotoXY(5, 15);
+					printf("player 1(GREEN)ÀÇ ÅÏ ½ÃÀÛ!");
+					this_turn = &a1;
+					oppo = &a2;
+				}
+				else if (a2.get_order() == 2) {
+					GotoXY(5, 15);
+					printf("player 2(RED)ÀÇ ÅÏ ½ÃÀÛ!");
+					this_turn = &a2;
+					oppo = &a1;
+				}
+				GotoXY(5, 16);
+				printf("¾Æ¹«Å°³ª ´­·¯ ÁÖ»çÀ§ ´øÁö±â");
+				_getch();
+				text_remove();
+				int dice1 = rand() % 6 + 1; int dice2 = rand() % 6 + 1;
+				GotoXY(5, 15);
+				printf("ÁÖ»çÀ§ °á°ú: %d, %d", dice1, dice2);
+				GotoXY(5, 16);
+				printf("%d¹ø ¶¥À» Á¡·ÉÇÒ ¼ö ÀÖ½À´Ï´Ù!", dice1 * dice2);
+				GotoXY(5, 17);
+				printf("¾Æ¹«Å°³ª ´­·¯ ÁøÇàÇÏ±â");
+				_getch();
+				text_remove();
+				int* num = getindex(dice1 * dice2);
+				if (colorMap[*num][*(num + 1)] == 0 || colorMap[*num][*(num + 1)] == this_turn->get_opponent_color()) {
+					if (colorMap[*num][*(num + 1)] == this_turn->get_opponent_color()) {
+						GotoXY(5, 15);
+						printf("»ó´ë ¶¥ %d¹ø ¶¥À» Á¡·ÉÇÏ¿´½À´Ï´Ù!", dice1 * dice2);
+						colorMap[*num][*(num + 1)] = this_turn->get_my_color();
+						this_turn->set_many_ground(this_turn->get_many_ground() + 1);
+						oppo->set_many_ground(oppo->get_many_ground() - 1);
+						GotoXY(5, 16);
+						printf("»ó´ë ¶¥À» Á¡·ÉÇÏ¿´À¸¹Ç·Î, ÇÑ¹ø ´õ ÁÖ»çÀ§¸¦ ´øÁú ±âÈ¸¸¦ ¾ò¾ú½À´Ï´Ù!");
+						GotoXY(5, 17);
+						printf("¾Æ¹«Å°³ª ´­·¯ ÁøÇàÇÏ±â");
+						_getch();
+						text_remove();
+						delete num;
+						DrawMain();
+						score(&a1, &a2);
+						Sleep(100);
+						if ((a1.get_many_ground() + a2.get_many_ground()) == 36) {
+							DrawGameClear(&a1, &a2);
+							break;
+						}
+						continue;
 					}
 					else {
-						colorMap[player.y][player.x] = RED;
-						player2Count++;
-						turn = true;
+						GotoXY(5, 15);
+						printf("ºó ¶¥ %d¹ø ¶¥À» Á¡·ÉÇÏ¿´½À´Ï´Ù!", dice1 * dice2);
+						colorMap[*num][*(num + 1)] = this_turn->get_my_color();
+						this_turn->set_many_ground(this_turn->get_many_ground() + 1);
+						GotoXY(5, 16);
+						printf("¾Æ¹«Å°³ª ´­·¯ ÁøÇàÇÏ±â");
+						_getch();
 					}
 				}
-				else{
-					if (colorMap[player.y][player.x] == RED) {//ë§Œì•½ ì´ë¯¸ ë•…ì´ ìƒëŒ€ë°©ì´ ìƒ‰ê¹”ì´ë©´, ìƒëŒ€ë°© ë•… ê°¯ìˆ˜ -1 í›„ ìì‹ ì˜ ìƒ‰ìœ¼ë¡œ ë³€ê²½í›„ í•œë²ˆì˜ ê¸°íšŒ ë” ê°€ì§
-						colorMap[player.y][player.x] = GREEN;
-						player1Count++;
-						player2Count--;
+				else if (colorMap[*num][*(num + 1) + 1] == 0 || colorMap[*num][*(num + 1) + 1] == this_turn->get_opponent_color()) {
+					if (colorMap[*num][*(num + 1) + 1] == this_turn->get_opponent_color()) {
+						GotoXY(5, 15);
+						printf("»ó´ë ¶¥ %d¹ø ¶¥À» Á¡·ÉÇÏ¿´½À´Ï´Ù!", dice1 * dice2);
+						colorMap[*num][*(num + 1) + 1] = this_turn->get_my_color();
+						this_turn->set_many_ground(this_turn->get_many_ground() + 1);
+						oppo->set_many_ground(oppo->get_many_ground() - 1);
+						GotoXY(5, 16);
+						printf("»ó´ë ¶¥À» Á¡·ÉÇÏ¿´À¸¹Ç·Î, ÇÑ¹ø ´õ ÁÖ»çÀ§¸¦ ´øÁú ±âÈ¸¸¦ ¾ò¾ú½À´Ï´Ù!");
+						GotoXY(5, 17);
+						printf("¾Æ¹«Å°³ª ´­·¯ ÁøÇàÇÏ±â"); _getch();
+						text_remove();
+						delete num;
+						DrawMain();
+						score(&a1, &a2);
+						Sleep(100);
+						if ((a1.get_many_ground() + a2.get_many_ground()) == 36) {
+							DrawGameClear(&a1, &a2);
+							break;
+						}
+						continue;
 					}
 					else {
-						colorMap[player.y][player.x] = GREEN;
-						player1Count++;
-						turn = false;
+						GotoXY(5, 15);
+						printf("ºó ¶¥ %d¹ø ¶¥À» Á¡·ÉÇÏ¿´½À´Ï´Ù!", dice1 * dice2); 
+						GotoXY(5, 16);
+						printf("¾Æ¹«Å°³ª ´­·¯ ÁøÇàÇÏ±â"); _getch();
+						colorMap[*num][*(num + 1) + 1] = this_turn->get_my_color();
+						this_turn->set_many_ground(this_turn->get_many_ground() + 1);
 					}
 				}
-
+				else {
+					GotoXY(5, 15);
+					printf("Á¡·ÉÇÒ %d¹øÂ° ¶¥ÀÌ ¾ø½À´Ï´Ù..", dice1 * dice2); 
+					GotoXY(5, 16);
+					printf("¾Æ¹«Å°³ª ´­·¯ ÁøÇàÇÏ±â"); _getch();
+				}
+				text_remove();
+				delete num;
+				break;
 			}
 			//draw
 			DrawMain();
-			score();
+			score(&a1,&a2);
 			Sleep(100);
-			if ((player1Count + player2Count) == 36) {
-				DrawGameClear();
+			if ((a1.get_many_ground() + a2.get_many_ground()) == 36) {
+				DrawGameClear(&a1,&a2);
 				break;
 			}
 		}
 	}
 
-	//ë§µ ì´ˆê¸°í™”
+	//¸Ê ÃÊ±âÈ­
 	void Init()
 	{
 		player.x = 0;
@@ -150,21 +474,21 @@ public:
 			}
 		}
 		turn = true;
-		
+
 	}
-	void score(){//ê° í”Œë ˆì´ì–´ ë¨¹ì€ ë•… ê°¯ìˆ˜ ì¶œë ¥ í•¨ìˆ˜
+	void score(P::player * p1, P::player* p2) {//°¢ ÇÃ·¹ÀÌ¾î ¸ÔÀº ¶¥ °¹¼ö Ãâ·Â ÇÔ¼ö
 		GotoXY(25, 6);
-		printf("â–¡    %02d     â–¡     %02d    â–¡", player1Count, player2Count);
+		printf("¡à    %02d     ¡à     %02d    ¡à", p1->get_many_ground(), p2->get_many_ground());
 	}
 
 
-	//ì»¤ì„œì˜ ìœ„ì¹˜ ì´ë™
+	//Ä¿¼­ÀÇ À§Ä¡ ÀÌµ¿
 	void MovePos()
 	{
 		GotoXY(INIT_POS + (player.x * 4), INIT_POS + (player.y * 2) + 1);
 		printf("  ");
 
-		//í‚¤ë³´ë“œ ì…ë ¥ì„ ë°›ì•„ì„œ, í•´ë‹¹ ìœ„ì¹˜ë¡œ ì´ë™ì„ ì‹œì¼œì¤€ë‹¤.
+		//Å°º¸µå ÀÔ·ÂÀ» ¹Ş¾Æ¼­, ÇØ´ç À§Ä¡·Î ÀÌµ¿À» ½ÃÄÑÁØ´Ù.
 		switch (_getch())
 		{
 		case KEYBOARD::LEFT:
@@ -210,19 +534,15 @@ public:
 			for (int x = 0; x < 6; ++x)
 			{
 				c = colorMap[y][x];
-				if(c == GREEN){ SetTextColor(GREEN); }//colorë§µì— ë”°ë¼ ìƒ‰ ì¹ í•˜ê¸°
-				else if(c==RED){ SetTextColor(RED); }
-				else{ SetTextColor(WHITE); }
+				if (c == GREEN) { SetTextColor(GREEN); }//color¸Ê¿¡ µû¶ó »ö Ä¥ÇÏ±â
+				else if (c == RED) { SetTextColor(RED); }
+				else { SetTextColor(WHITE); }
 				d = originMap[y][x];
 				printf("[%02d]    ", d);
 				SetTextColor(WHITE);
 			}
 		}
 		SetTextColor(WHITE);
-	
-		//player draw
-		GotoXY(INIT_POS + (player.x * 4), INIT_POS + (player.y * 2) + 1);
-		printf(" ^");
 
 
 		GotoXY(25, 1);
@@ -233,11 +553,11 @@ public:
 	{
 		SetTextColor(WHITE);
 		GotoXY(25, 5);
-		cout << "â–¡â–¡player1â–¡â–¡â–¡player2â–¡â–¡";
+		cout << "¡à¡àplayer1¡à¡à¡àplayer2¡à¡à";
 		GotoXY(25, 7);
-		cout << "â–¡           â–¡           â–¡";
+		cout << "¡à           ¡à           ¡à";
 		GotoXY(25, 8);
-		cout << "â–¡â–¡â–¡â–¡â–¡â–¡â–¡â–¡â–¡â–¡â–¡â–¡â–¡â–¡";
+		cout << "¡à¡à¡à¡à¡à¡à¡à¡à¡à¡à¡à¡à¡à¡à";
 		GotoXY(25, 10);
 		cout << "Kwang Woon Univ";
 		GotoXY(25, 11);
@@ -245,18 +565,45 @@ public:
 		SetTextColor(PINK);
 		cout << "team 18";
 		SetTextColor(WHITE);
+		GotoXY(0, 14);
+		for (int i = 0; i < 40; i++) { cout << "¡à"; }
+		GotoXY(0, 18);
+		for (int i = 0; i < 40; i++) { cout << "¡à"; }
 	}
 
-	void DrawGameClear()
+	void DrawGameClear(P::player * p1,P::player * p2)
 	{
-		SetTextColor(YELLOW);
-		GotoXY(3, 5);
-		cout << "=========================";
-		GotoXY(3, 6);
-		cout << "======= C L E A R =======";
-		GotoXY(3, 7);
-		cout << "=========================";
-		SetTextColor(WHITE);
+		system("cls");
+		if (p1->get_many_ground() > p2->get_many_ground()) {
+			SetTextColor(YELLOW);
+			GotoXY(3, 5);
+			cout << "=========================";
+			GotoXY(3, 6);
+			cout << "===== Player 1 win! =====";
+			GotoXY(3, 7);
+			cout << "=========================";
+			SetTextColor(WHITE);
+		}
+		else if (p1->get_many_ground() < p2->get_many_ground()) {
+			SetTextColor(YELLOW);
+			GotoXY(3, 5);
+			cout << "=========================";
+			GotoXY(3, 6);
+			cout << "===== Player 2 win! =====";
+			GotoXY(3, 7);
+			cout << "=========================";
+			SetTextColor(WHITE);
+		}
+		else {
+			SetTextColor(YELLOW);
+			GotoXY(3, 5);
+			cout << "=========================";
+			GotoXY(3, 6);
+			cout << "========= draw! =========";
+			GotoXY(3, 7);
+			cout << "=========================";
+			SetTextColor(WHITE);
+		}
 	}
 
 	void SetTextColor(int color)
@@ -265,10 +612,12 @@ public:
 	}
 };
 
-//ë©”ì¸í•¨ìˆ˜
+//¸ŞÀÎÇÔ¼ö
 int main(void)
 {
+	srand(time(NULL));
 	SetConsoleView();
+	title();
 	GameManager* pGameMgr = new GameManager();
 	pGameMgr->StartGame();
 	delete(pGameMgr);
