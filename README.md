@@ -23,6 +23,8 @@ Dice Conquest is licensed under the [MIT License](https://github.com/hyeonjun-ka
 <img src="https://user-images.githubusercontent.com/39071763/142800635-698b06d9-a603-490d-bcce-7508d017e41a.PNG" width="580" height="300">  
 게임 순서를 정하는 화면  
 <img src="https://user-images.githubusercontent.com/39071763/142800996-37779395-59e5-4564-9509-77e5fb54aa8e.PNG" width="580" height="300">  
+게임 초기화면  
+<img src="" width="580" height="300">  
 게임 진행화면  
 <img src="" width="580" height="300">  
 게임 종료화면  
