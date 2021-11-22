@@ -7,13 +7,15 @@ Dice Conquest는 6x6 크기의 영토를 2명의 플레이어가 주사위를 �
   + 게임 시작 후 플레이어가 영토 정복을 위해 던진 주사위 2개가 모두 같은 수 Ex) 1,1 2,2 3,3, 4,4 5,5 6,6가 나오면 플레이어에게는 주사위를 한 번 더 던질 수 있는 기회가 주어집니다.
   + 플레이어가 2개의 주사위를 던져 얻은 값에 해당하는 영토가 이미 상대편 플레이어가 정복한 영토라면, 플레이어는 그 영토를 빼앗고 주사위를 한 번 더 던질 수 있습니다.
   + 플레이어가 2개의 주사위를 던져 얻은 값에 해당하는 영토가 이미 자신이 정복한 영토라면, 플레이어는 공격권을 상대편 플레이어에게 넘겨주게 됩니다. 
-# How to Play Dice Conquest
-
 # Development Environment
-Dice Conquest는 Visual Studio 2017의 환경에서 C++ 언어로 개발되었습니다. 
+Dice Conquest는 Visual Studio 2017의 환경에서 C++ 언어로 개발되었습니다.
+# How to Play Dice Conquest
+저장소의 홈 화면에서 초록색 Code 버튼을 눌러 Dice Conquest 코드를 다운로드 해주세요. 다운로드 후 압축을 풀고 폴더에서 Dice Conquest.sln 파일을 Visual Studio 환경에서 열고 ctrl + F5 를 눌러 Dice Conquest를 실행하시면 됩니다.    
+Dice Conquest를 신나게 즐겨보세요!
 # Contributor
 광운대학교 오픈소스소프트웨어개발 18조  
 KW-OSS-TEAM 18 지혜로운 나무는 그림자 속에  
 팀장 - 이준서 팀원 - 강현준, 조성남, 안알렉산드르
 # License
 Dice Conquest is licensed under the [MIT License](https://github.com/hyeonjun-kang/KW-OSS-TEAM-18/blob/main/LICENSE).
+# ScreenShots
