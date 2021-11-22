@@ -19,3 +19,4 @@ KW-OSS-TEAM 18 지혜로운 나무는 그림자 속에
 # License
 Dice Conquest is licensed under the [MIT License](https://github.com/hyeonjun-kang/KW-OSS-TEAM-18/blob/main/LICENSE).
 # ScreenShots
+게임 시작화면
