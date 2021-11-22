@@ -10,7 +10,8 @@ Dice Conquest는 6x6 크기의 영토를 2명의 플레이어가 주사위를 �
 Dice Conquest는 Visual Studio 2017의 환경에서 C++ 언어로 개발되었습니다.
 # How to Play Dice Conquest
 + 저장소의 홈 화면에서 초록색 Code 버튼을 눌러 Dice Conquest 코드를 다운로드 해주세요.  
-+ 다운로드 후 압축을 풀고 KW_OSS_18 Dice Conquest 폴더에서 KW_OSS_18 Dice Conquest.sln 파일을 Visual Studio 환경에서 열고 ctrl + F5 를 눌러 Dice Conquest를 실행하시면 됩니다.    
++ 다운로드 후 압축을 풀고 KW_OSS_18 Dice Conquest 폴더에서 KW_OSS_18 Dice Conquest.sln 파일을 Visual Studio 환경에서 열어주세요.
++ 오른쪽 솔루션 탐색기 창에서 소스 파일을 클릭하여 main.cpp를 열고 ctrl + F5 를 눌러 Dice Conquest를 실행하시면 됩니다.    
 + Dice Conquest를 신나게 즐겨보세요!
 # Contributor
 광운대학교 오픈소스소프트웨어개발 18조  
