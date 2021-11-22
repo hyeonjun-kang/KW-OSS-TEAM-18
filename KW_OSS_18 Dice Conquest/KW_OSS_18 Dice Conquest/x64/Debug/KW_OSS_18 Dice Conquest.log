@@ -1,0 +1,3 @@
+﻿  main.cpp
+c:\users\hyeonjun\source\repos\kw_oss_18 dice conquest\kw_oss_18 dice conquest\main.cpp(618): warning C4244: '인수': 'time_t'에서 'unsigned int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+  KW_OSS_18 Dice Conquest.vcxproj -> C:\Users\hyeonjun\source\repos\KW_OSS_18 Dice Conquest\x64\Debug\KW_OSS_18 Dice Conquest.exe
