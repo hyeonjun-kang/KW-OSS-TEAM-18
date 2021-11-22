@@ -33,11 +33,17 @@ bool player_win(player p1, player p2)
 {
 	if (p1.get_order() == 1)
 	{
-
+		if (p1.get_many_ground() == 18)
+			return true;
+		else if (p2.get_many_ground() == 18)
+			return false;
 	}
 	else
 	{
-
+		if (p2.get_many_ground() == 18)
+			return false;
+		else if (p1.get_many_ground() == 18)
+			return true;
 	}
 	
 }
